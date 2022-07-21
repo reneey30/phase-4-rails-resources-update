@@ -1,51 +1,42 @@
 class BirdsController < ApplicationController
-# UPDATE /birds
-  def update
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      bird.update(bird_params)
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
-  end
+ # GET /birds
+ def index
+  birds = Bird.all
+  render json: birds
+end
 
-  # GET /birds
-  def index
-    birds = Bird.all
-    render json: birds
-  end
+# POST /birds
+def create
+  bird = Bird.create(bird_params)
+  render json: bird, status: :created
+end
 
-  # POST /birds
-  def create
-    bird = Bird.create(bird_params)
-    render json: bird, status: :created
+# GET /birds/:id
+def show
+  bird = Bird.find_by(id: params[:id])
+  if bird
+    render json: bird
+  else
+    render json: { error: "Bird not found" }, status: :not_found
   end
+end
 
-  # GET /birds/:id
-  def show
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
+def update
+  birdy = Bird.find_by(id: params[:id])
+
+  if birdy
+    birdy.update(bird_params)
+    render json: birdy
+  else
+    render json { error: "bird not fount"}, status: :not_found
   end
+end
 
-  private
+private
 
-  def bird_params
-    params.permit(:name, :species)
-  end
+def bird_params
+  params.permit(:name, :species)
+end
 
-  def increment_likes
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      bird.update(likes: bird.likes + 1)
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
-  end
   
 end
